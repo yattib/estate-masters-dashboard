@@ -67,9 +67,7 @@ session_start();
             "
             ><i class="bi bi-globe"></i> View Site</a
           >
-          <button class="logout-btn" onclick="alert('Logout clicked')">
-            <i class="bi bi-box-arrow-right"></i> Logout
-          </button>
+         
         </div>
       </div>
     </header>
@@ -118,3 +116,4 @@ session_start();
 
   </body>
 </html>
+
