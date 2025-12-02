@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estate Masters - Admin Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #1b5e20;
+        --primary-dark: #0d3817;
+        --primary-light: #2d7d2d;
+        --secondary: #ff9800;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --success: #10b981;
+        --info: #3b82f6;
+        --light: #f3f4f6;
+        --dark: #1f2937;
+        --border: #e5e7eb;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f9fafb;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ===== HEADER ===== */
+      .header {
+        background: white;
+        border-bottom: 2px solid var(--border);
+        padding: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        max-width: 100%;
+      }
+
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .header-brand i {
+        font-size: 32px;
+      }
+
+      .header-user {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .user-name {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 14px;
+      }
+
+      .user-role {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+
+      .logout-btn {
+        padding: 8px 16px;
+        background: var(--danger);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .logout-btn:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+      }
+
+      /* ===== MAIN LAYOUT ===== */
+      .container-fluid {
+        display: flex;
+        flex: 1;
+      }
+
+      /* ===== SIDEBAR ===== */
+      .sidebar {
+        width: 260px;
+        background: white;
+        border-right: 1px solid var(--border);
+        padding: 20px;
+        overflow-y: auto;
+        position: sticky;
+        top: 70px;
+        height: calc(100vh - 70px);
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+      }
+
+      .nav-item:hover {
+        background: var(--light);
+        color: var(--primary);
+        border-left-color: var(--primary);
+      }
+
+      .nav-item.active {
+        background: rgba(27, 94, 32, 0.1);
+        color: var(--primary);
+        border-left-color: var(--primary);
+      }
+
+      .nav-item i {
+        font-size: 18px;
+        width: 20px;
+        text-align: center;
+      }
+
+      /* ===== CONTENT ===== */
+      .content {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+      }
+
+      .page-header {
+        margin-bottom: 30px;
+      }
+
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .page-desc {
+        color: #9ca3af;
+        font-size: 14px;
+      }
+
+      /* ===== STATS GRID ===== */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+      }
+
+      .stat-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+      }
+
+      .stat-label {
+        font-size: 13px;
+        color: #9ca3af;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+
+      .stat-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+
+      .stat-icon.primary {
+        color: var(--primary);
+      }
+      .stat-icon.secondary {
+        color: var(--secondary);
+      }
+      .stat-icon.warning {
+        color: var(--warning);
+      }
+      .stat-icon.info {
+        color: var(--info);
+      }
+
+      /* ===== CARDS ===== */
+      .card {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+      }
+
+      .card-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+      }
+
+      .btn-secondary {
+        background: var(--secondary);
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #f39c12;
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      /* ===== TABLE ===== */
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      table th {
+        background: var(--light);
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--border);
+      }
+
+      table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      table tr:hover {
+        background: var(--light);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .badge-success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-danger {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .badge-info {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      /* ===== EMPTY STATE ===== */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #9ca3af;
+      }
+
+      .empty-state i {
+        font-size: 64px;
+        color: var(--border);
+        margin-bottom: 20px;
+      }
+
+      .empty-state h3 {
+        color: var(--dark);
+        margin-bottom: 8px;
+      }
+
+      /* ===== HAMBURGER MENU ===== */
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--dark);
+        padding: 8px;
+      }
+
+      .hamburger:hover {
+        color: var(--primary);
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 1024px) {
+        .sidebar {
+          width: 220px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hamburger {
+          display: block;
+        }
+
+        .header-inner {
+          padding: 12px 20px;
+        }
+
+        .header-brand {
+          font-size: 18px;
+        }
+
+        .user-info {
+          display: none;
+        }
+
+        .logout-btn {
+          display: none;
+        }
+
+        .sidebar {
+          width: 260px;
+          height: calc(100vh - 70px);
+          position: fixed;
+          left: -260px;
+          top: 70px;
+          transition: left 0.3s ease;
+          z-index: 1001;
+          border-right: 1px solid var(--border);
+        }
+
+        .sidebar.active {
+          left: 0;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 20px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .hamburger {
+          display: block;
+        }
+
+        .logout-btn {
+          display: none;
+        }
+
+        .header-inner {
+          padding: 12px 15px;
+        }
+
+        .header-brand {
+          font-size: 16px;
+          gap: 8px;
+        }
+
+        .header-brand a span {
+          display: none;
+        }
+
+        .header-brand img {
+          height: 32px !important;
+        }
+
+        .header-user {
+          gap: 10px;
+        }
+
+        .btn {
+          padding: 8px 12px;
+          font-size: 12px;
+        }
+
+        .sidebar {
+          width: 70vw;
+          left: -70vw;
+        }
+
+        .content {
+          padding: 15px;
+        }
+
+        .page-header {
+          margin-bottom: 20px;
+        }
+
+        .page-title {
+          font-size: 18px;
+          gap: 8px;
+        }
+
+        .page-title i {
+          font-size: 20px;
+        }
+
+        .stats-grid {
+          gap: 15px;
+        }
+
+        .stat-card {
+          padding: 16px;
+        }
+
+        .stat-value {
+          font-size: 24px;
+        }
+
+        .stat-label {
+          font-size: 11px;
+        }
+
+        .card-header {
+          padding: 15px;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .card-title {
+          font-size: 16px;
+        }
+
+        .card-body {
+          padding: 15px;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        table th,
+        table td {
+          padding: 10px 8px;
+        }
+
+        .badge {
+          padding: 3px 8px;
+          font-size: 11px;
+        }
+
+        .btn-sm {
+          padding: 5px 10px;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <div class="header-inner">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <button class="hamburger" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+          </button>
+          <div class="header-brand">
+            <a
+              href="#"
+              style="
+                text-decoration: none;
+                color: inherit;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+              ">
+              <img
+                src="Picture1.0.png"
+                alt="Estate Masters"
+                style="height: 40px; width: auto" />
+              <span>Estate Masters</span>
+            </a>
+          </div>
+        </div>
+        <div class="header-user">
+          <div class="user-profile">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+              <div class="user-name">Admin User</div>
+              <div class="user-role">Administrator</div>
+            </div>
+          </div>
+          <a
+            href="https://yattib.github.io/estate-masters/"
+            class="btn"
+            style="
+              padding: 8px 12px;
+              background: #3b82f6;
+              color: white;
+              text-decoration: none;
+              border-radius: 6px;
+              font-size: 13px;
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              transition: all 0.3s;
+            "
+            ><i class="bi bi-globe"></i> View Site</a
+          >
+          <button class="logout-btn" onclick="alert('Logout clicked')">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+      <!-- ===== SIDEBAR OVERLAY ===== -->
+      <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="toggleSidebar()"></div>
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="sidebar" id="sidebar">
+        <div class="nav-item active" onclick="showSection('dashboard')">
+          <i class="bi bi-speedometer2"></i> Dashboard
+        </div>
+        <div class="nav-item" onclick="showSection('properties')">
+          <i class="bi bi-building"></i> Properties
+        </div>
+        <div class="nav-item" onclick="showSection('tenants')">
+          <i class="bi bi-people"></i> Tenants
+        </div>
+        <div class="nav-item" onclick="showSection('maintenance')">
+          <i class="bi bi-tools"></i> Maintenance
+        </div>
+        <div class="nav-item" onclick="showSection('finances')">
+          <i class="bi bi-cash-coin"></i> Finances
+        </div>
+        <div
+          style="
+            border-top: 1px solid var(--border);
+            margin-top: 10px;
+            padding-top: 10px;
+          ">
+          <div class="nav-item" onclick="logout()" style="color: var(--danger)">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </div>
+        </div>
+      </aside>
+
+      <!-- ===== CONTENT ===== -->
+      <main class="content">
+        <!-- ===== DASHBOARD SECTION ===== -->
+        <section id="dashboard-section" class="section">
+          <div class="page-header">
+            <div class="page-title">
+              <i class="bi bi-speedometer2"></i> Dashboard Overview
+            </div>
+            <div class="page-desc">
+              Welcome back! Here's your property management summary.
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon primary">
+                <i class="bi bi-building"></i>
+              </div>
+              <div class="stat-label">Total Properties</div>
+              <div class="stat-value">8</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon info"><i class="bi bi-people"></i></div>
+              <div class="stat-label">Active Tenants</div>
+              <div class="stat-value">12</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon warning">
+                <i class="bi bi-cash-coin"></i>
+              </div>
+              <div class="stat-label">Monthly Revenue</div>
+              <div class="stat-value">KSH 580,000</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon secondary">
+                <i class="bi bi-exclamation-triangle"></i>
+              </div>
+              <div class="stat-label">Pending Maintenance</div>
+              <div class="stat-value">3</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PROPERTIES SECTION ===== -->
+        <section id="properties-section" class="section" style="display: none">
+          <div class="page-header">
+            <div class="page-title">
+              <i class="bi bi-building"></i> Properties Management
+            </div>
+            <div class="page-desc">Add, edit, or manage your properties.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-list-ul"></i> All Properties
+              </div>
+              <button class="btn btn-primary" onclick="alert('Add Property')">
+                <i class="bi bi-plus-circle"></i> Add Property
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Location</th>
+                      <th>Monthly Rent</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Sunrise Apartments</td>
+                      <td>Apartment</td>
+                      <td>Nairobi - Westlands</td>
+                      <td>KSH 80,000</td>
+                      <td>
+                        <span class="badge badge-success">Available</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-secondary" title="Edit">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Downtown Office</td>
+                      <td>Commercial</td>
+                      <td>Nairobi - CBD</td>
+                      <td>KSH 120,000</td>
+                      <td>
+                        <span class="badge badge-success">Available</span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-secondary" title="Edit">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Garden Residence</td>
+                      <td>House</td>
+                      <td>Nairobi - Karen</td>
+                      <td>KSH 150,000</td>
+                      <td><span class="badge badge-warning">Rented</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-secondary" title="Edit">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TENANTS SECTION ===== -->
+        <section id="tenants-section" class="section" style="display: none">
+          <div class="page-header">
+            <div class="page-title">
+              <i class="bi bi-people"></i> Tenants Management
+            </div>
+            <div class="page-desc">Manage all tenant information.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-list-ul"></i> All Tenants
+              </div>
+              <button class="btn btn-primary" onclick="alert('Add Tenant')">
+                <i class="bi bi-plus-circle"></i> Add Tenant
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Property</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>John Kariuki</td>
+                      <td>john.kariuki@email.com</td>
+                      <td>+254 712 345 678</td>
+                      <td>Garden Residence</td>
+                      <td><span class="badge badge-success">Active</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Sarah Mwangi</td>
+                      <td>sarah.mwangi@email.com</td>
+                      <td>+254 723 456 789</td>
+                      <td>Sunrise Apartments</td>
+                      <td><span class="badge badge-success">Active</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== MAINTENANCE SECTION ===== -->
+        <section id="maintenance-section" class="section" style="display: none">
+          <div class="page-header">
+            <div class="page-title">
+              <i class="bi bi-tools"></i> Maintenance Requests
+            </div>
+            <div class="page-desc">Track and manage maintenance issues.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-list-ul"></i> All Requests
+              </div>
+              <button class="btn btn-primary" onclick="alert('Add Request')">
+                <i class="bi bi-plus-circle"></i> Add Request
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Property</th>
+                      <th>Issue</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Sunrise Apartments</td>
+                      <td>Plumbing issue in unit 3</td>
+                      <td><span class="badge badge-danger">Urgent</span></td>
+                      <td>
+                        <span class="badge badge-warning">In Progress</span>
+                      </td>
+                      <td>2025-12-01</td>
+                      <td>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Garden Residence</td>
+                      <td>AC maintenance required</td>
+                      <td><span class="badge badge-warning">High</span></td>
+                      <td><span class="badge badge-success">Open</span></td>
+                      <td>2025-11-30</td>
+                      <td>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== FINANCES SECTION ===== -->
+        <section id="finances-section" class="section" style="display: none">
+          <div class="page-header">
+            <div class="page-title">
+              <i class="bi bi-cash-coin"></i> Financial Records
+            </div>
+            <div class="page-desc">Track expenses and rent payments.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="bi bi-list-ul"></i> All Records
+              </div>
+              <button class="btn btn-primary" onclick="alert('Add Expense')">
+                <i class="bi bi-plus-circle"></i> Add Expense
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Property</th>
+                      <th>Description</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="badge badge-info">Expense</span></td>
+                      <td>Sunrise Apartments</td>
+                      <td>Monthly utilities</td>
+                      <td>KSH 15,000</td>
+                      <td>2025-12-01</td>
+                      <td>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge badge-info">Expense</span></td>
+                      <td>Garden Residence</td>
+                      <td>Security guard salary</td>
+                      <td>KSH 25,000</td>
+                      <td>2025-11-30</td>
+                      <td>
+                        <button class="btn btn-sm btn-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      function showSection(sectionName) {
+        // Hide all sections
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => (s.style.display = "none"));
+
+        // Show selected section
+        document.getElementById(sectionName + "-section").style.display =
+          "block";
+
+        // Update active nav item
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        event.target.closest(".nav-item").classList.add("active");
+
+        // Close sidebar on mobile after selection
+        if (window.innerWidth <= 768) {
+          toggleSidebar();
+        }
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const hamburger = document.querySelector(".hamburger i");
+
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+
+        // Toggle hamburger icon
+        if (sidebar.classList.contains("active")) {
+          hamburger.classList.remove("bi-list");
+          hamburger.classList.add("bi-x");
+        } else {
+          hamburger.classList.remove("bi-x");
+          hamburger.classList.add("bi-list");
+        }
+      }
+
+      // Close sidebar when clicking a nav item on mobile
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.addEventListener("click", function () {
+          if (window.innerWidth <= 768) {
+            setTimeout(() => {
+              document.getElementById("sidebar").classList.remove("active");
+              document
+                .getElementById("sidebarOverlay")
+                .classList.remove("active");
+            }, 100);
+          }
+        });
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", function () {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const hamburger = document.querySelector(".hamburger i");
+
+        if (window.innerWidth > 768) {
+          sidebar.classList.remove("active");
+          overlay.classList.remove("active");
+          hamburger.classList.remove("bi-x");
+          hamburger.classList.add("bi-list");
+        }
+      });
+
+      function logout() {
+        alert("Logout clicked");
+      }
+    </script>
+  </body>
+</html>
